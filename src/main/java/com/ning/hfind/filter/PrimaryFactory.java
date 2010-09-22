@@ -48,7 +48,7 @@ public class PrimaryFactory
             return new SizePrimary(argument);
         }
         else if (primary.equals("mtime")) {
-            throw new IllegalArgumentException("TODO");
+            return new MtimePrimary(argument);
         }
         else if (primary.equals("newer")) {
             throw new IllegalArgumentException("TODO");
