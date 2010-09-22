@@ -1,0 +1,14 @@
+= hfind, find implementation for Hadoop
+
+== Usage
+
+    http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
+
+== Build
+
+    mvn assembly:assembly
+
+
+== License
+
+See COPYING file.
