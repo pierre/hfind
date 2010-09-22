@@ -144,7 +144,12 @@ public class Find
 
         Expression expression = null;
         try {
-            expression = buildExpressionFromCommandLine(line.getOptions(), 0);
+            if (line.getOptions().length > 0) {
+                expression = buildExpressionFromCommandLine(line.getOptions(), 0);
+            }
+            else {
+                expression = new Expression(Primary.ALWAYS_MATCH, Primary.ALWAYS_MATCH, new AndOperand());
+            }
         }
         catch (IllegalArgumentException e) {
             System.err.println(e);
