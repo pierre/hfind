@@ -32,39 +32,45 @@ public class HdfsItem
     private final FileStatus status;
 
     private final Path path;
+    private final int depth;
 
     private final String name;
 
     private volatile ImmutableList<HdfsItem> children;
 
-    public HdfsItem(FileSystem fs, String path) throws IOException
+    public HdfsItem(FileSystem fs, String path, int depth) throws IOException
     {
-        this(fs, fs.getFileStatus(new Path(path)));
+        this(fs, fs.getFileStatus(new Path(path)), depth);
     }
 
-    private HdfsItem(FileSystem fs, FileStatus status) throws IOException
+    private HdfsItem(FileSystem fs, FileStatus status, int depth) throws IOException
     {
         this.fs = fs;
         this.status = status;
+
         this.path = status.getPath();
+        this.depth = depth;
 
         if (status.isDir()) {
-            this.name = "/" + path.getName();
+            this.name = path.toUri().getPath();
         }
         else {
-            this.name = path.getName();
+            this.name = String.format("%s/%s", path.getParent().toUri().getPath(), path.getName());
             this.children = ImmutableList.of();
         }
     }
 
     public ImmutableList<HdfsItem> getChildren()
     {
-        if (children == null) {
+        if (depth <= 0) {
+            children = ImmutableList.of();
+        }
+        else if (children == null) {
             ImmutableList.Builder<HdfsItem> children = ImmutableList.builder();
 
             try {
                 for (FileStatus status : fs.listStatus(path)) {
-                    children.add(new HdfsItem(fs, status));
+                    children.add(new HdfsItem(fs, status, depth - 1));
                 }
             }
             catch (IOException e) {
@@ -81,7 +87,7 @@ public class HdfsItem
     {
         return name;
     }
-    
+
     public FileStatus getStatus()
     {
         return status;

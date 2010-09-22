@@ -20,31 +20,32 @@ import com.ning.hfind.filter.Expression;
 
 public class Printer
 {
-    public Printer(String path, HdfsItem item, Expression expression)
+    private final boolean depthMode;
+
+    public Printer(HdfsItem item, Expression expression, boolean depthMode)
     {
-        run(item, expression, path);
+        this.depthMode = depthMode;
+        run(item, expression);
     }
 
-    private void run(HdfsItem item, Expression expression, String pathPrefix)
+    private void run(HdfsItem item, Expression expression)
     {
         FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getStatus());
 
-        if (expression.evaluate(itemAttributes)) {
-            String filePrefix = "";
-
-            if (!itemAttributes.isDirectory()) {
-                filePrefix = "/";
+        if (!depthMode) {
+            if (expression.evaluate(itemAttributes)) {
+                System.out.println(item.getName());
             }
-
-            System.out.println(String.format("%s%s%s", pathPrefix, filePrefix, item.getName()));
-        }
-
-        if (itemAttributes.isDirectory()) {
-            pathPrefix = String.format("%s%s", pathPrefix, item.getName());
         }
 
         for (HdfsItem childItem : item.getChildren()) {
-            run(childItem, expression, pathPrefix);
+            run(childItem, expression);
+        }
+
+        if (depthMode) {
+            if (expression.evaluate(itemAttributes)) {
+                System.out.println(item.getName());
+            }
         }
     }
 }

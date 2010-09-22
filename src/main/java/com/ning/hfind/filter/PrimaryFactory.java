@@ -54,7 +54,10 @@ public class PrimaryFactory
             throw new IllegalArgumentException("TODO");
         }
         else if (primary.equals("depth")) {
-            throw new IllegalArgumentException("TODO");
+            return null;
+        }
+        else if (primary.equals("d")) {
+            return null;
         }
         else {
             throw new IllegalArgumentException(String.format("Primary %s (argument %s) not implemented", primary, argument));

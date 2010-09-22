@@ -49,6 +49,9 @@ public class Find
 
     /**
      * Options which don't make any sense in Hadoop:
+     *
+     * -H Cause the file information and file type evaluated for each symbolic link encountered on the command line to be those of the file referenced by the link, and not the link itself. If the referenced file does not exist, the file information and type shall be for the link itself. File information for all symbolic links not on the command line shall be that of the link itself.
+     * -L Cause the file information and file type evaluated for each symbolic link to be those of the file referenced by the link, and not the link itself.
      * -xdev The primary shall always evaluate as true; it shall cause find not to continue descending past directories that have a different device ID ( st_dev, see the stat() function defined in the System Interfaces volume of IEEE Std 1003.1-2001). If any -xdev primary is specified, it shall apply to the entire expression even if the -xdev primary would not normally be evaluated.
      * -type only implements 'f' or 'd'
      * -links The primary shall evaluate as true if the file has n links.
@@ -81,7 +84,10 @@ public class Find
         options.addOption("mtime", null, true, "The primary shall evaluate as true if the file modification time subtracted from the initialization time, divided by 86400 (with any remainder discarded), is arg");
         options.addOption("print", null, false, "The primary shall always evaluate as true; it shall cause the current pathname to be written to standard output");
         options.addOption("newer", null, true, "The primary shall evaluate as true if the modification time of the current file is more recent than the modification time of the file named by the pathname file");
-        options.addOption("depth", null, false, "The primary shall always evaluate as true; it shall cause descent of the directory hierarchy to be done so that all entries in a directory are acted on before the directory itself. If a -depth primary is not specified, all entries in a directory shall be acted on after the directory itself. If any -depth primary is specified, it shall apply to the entire expression even if the -depth primary would not normally be evaluated.");
+
+        // Note: this is NOT the POSIX -depth option. See BSD implementation.
+        options.addOption("depth", null, true, "Depth of the recursion crawl");
+        options.addOption("d", null, false, "Cause find to perform a depth-first traversal");
     }
 
     public static void usage()
@@ -124,6 +130,17 @@ public class Find
         }
 
         String path = args[0];
+        // Optimization: check the depth on a top-level basis, not on a per-file basis
+        // This avoids crawling files on Hadoop we don't care about
+        int depth = Integer.MAX_VALUE;
+        if (line.hasOption("depth")) {
+            String depthOptionValue = line.getOptionValue("depth");
+            depth = Integer.valueOf(depthOptionValue);
+        }
+        boolean depthMode = false;
+        if (line.hasOption("d")) {
+            depthMode = true;
+        }
 
         Expression expression = null;
         try {
@@ -136,7 +153,7 @@ public class Find
 
         try {
             connectToHDFS();
-            expression.run(path, fs);
+            expression.run(path, fs, depth, depthMode);
 
             System.exit(0);
         }
@@ -150,6 +167,11 @@ public class Find
     {
         Primary leftPrimary = primaryFromOption(options[index]);
         index++;
+
+        // We ignore certain primaries, e.g. -depth
+        if (leftPrimary == null) {
+            leftPrimary = Primary.ALWAYS_MATCH;
+        }
 
         if (index >= options.length) {
             return new Expression(leftPrimary, Primary.ALWAYS_MATCH, new AndOperand());

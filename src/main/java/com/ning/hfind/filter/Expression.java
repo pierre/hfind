@@ -72,11 +72,11 @@ public class Expression
         this.expressionRight = expressionRight;
     }
 
-    public void run(String path, FileSystem fs) throws IOException
+    public void run(String path, FileSystem fs, int depth, boolean depthMode) throws IOException
     {
-        HdfsItem listing = new HdfsItem(fs, path);
+        HdfsItem listing = new HdfsItem(fs, path, depth);
 
-        new Printer(path, listing, this);
+        new Printer(listing, this, depthMode);
     }
     
     @Override
