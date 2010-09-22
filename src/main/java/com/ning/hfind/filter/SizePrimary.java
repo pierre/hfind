@@ -42,10 +42,10 @@ public class SizePrimary implements Primary
     public boolean passesFilter(FileAttributes attributes)
     {
         if (blockMode) {
-            return operandModifier.evaluate(size, Math.ceil(attributes.getBlockSize() / 512.0));
+            return operandModifier.evaluate(size, Math.ceil(attributes.getLength() / 512.0));
         }
         else {
-            return operandModifier.evaluate(size, attributes.getBlockSize());
+            return operandModifier.evaluate(size, attributes.getLength());
         }
     }
 
