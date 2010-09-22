@@ -20,9 +20,9 @@ import com.ning.hfind.filter.Expression;
 
 public class Printer
 {
-    public Printer(HdfsItem item, Expression expression)
+    public Printer(String path, HdfsItem item, Expression expression)
     {
-        run(item, expression, "");
+        run(item, expression, path);
     }
 
     private void run(HdfsItem item, Expression expression, String pathPrefix)

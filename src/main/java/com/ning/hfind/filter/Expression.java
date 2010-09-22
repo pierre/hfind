@@ -76,7 +76,7 @@ public class Expression
     {
         HdfsItem listing = new HdfsItem(fs, path);
 
-        new Printer(listing, this);
+        new Printer(path, listing, this);
     }
     
     @Override
