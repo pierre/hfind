@@ -1,4 +1,15 @@
-= hfind, find implementation for Hadoop
+= hfind, find(1) implementation for Hadoop
+
+== Examples
+
+hfind> hfind /user/pierre -type f -name fileb.dat -o -type d -name a
+/pierre/testing/a
+/pierre/testing/a/b/fileb.dat
+
+hfind> hfind /user/pierre -mtime +3 -type d
+/user/pierre/2010/09
+/user/pierre/2010/09/20
+/user/pierre/2010/09/21
 
 == Usage
 
