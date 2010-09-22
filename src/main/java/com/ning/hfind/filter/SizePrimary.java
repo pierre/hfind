@@ -25,6 +25,7 @@ public class SizePrimary implements Primary
 
     private static final String SIZE_CHARACTER = "c";
     private boolean blockMode = true;
+    private final OperandModifier operandModifier;
 
     public SizePrimary(String size)
     {
@@ -33,17 +34,18 @@ public class SizePrimary implements Primary
             size = StringUtils.chop(size);
         }
 
-        this.size = Integer.parseInt(size);
+        operandModifier = new OperandModifier(size);
+        this.size = operandModifier.getSanitizedArgument();
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
         if (blockMode) {
-            return size == Math.ceil(attributes.getBlockSize() / 512.0);
+            return operandModifier.evaluate(size, Math.ceil(attributes.getBlockSize() / 512.0));
         }
         else {
-            return size == attributes.getBlockSize();
+            return operandModifier.evaluate(size, attributes.getBlockSize());
         }
     }
 
