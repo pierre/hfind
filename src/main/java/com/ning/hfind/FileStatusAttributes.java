@@ -17,19 +17,24 @@
 package com.ning.hfind;
 
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.joda.time.DateTime;
 import org.joda.time.ReadableDateTime;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public class FileStatusAttributes implements FileAttributes
 {
+
+    private final FileSystem fs;
     private final FileStatus status;
 
-    public FileStatusAttributes(FileStatus status)
+    public FileStatusAttributes(FileSystem fs, FileStatus status)
     {
+        this.fs = fs;
         this.status = status;
     }
 
@@ -97,6 +102,17 @@ public class FileStatusAttributes implements FileAttributes
     public boolean isExecutableBy(String user, Collection<String> groups)
     {
         return allows(FsAction.EXECUTE, user, groups);
+    }
+
+    @Override
+    public FileStatus[] children() throws IOException
+    {
+        if (isDirectory()) {
+            return fs.listStatus(status.getPath());
+        }
+        else {
+            return null;
+        }
     }
 
     @Override

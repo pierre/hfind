@@ -88,6 +88,9 @@ public class Find
         // Note: this is NOT the POSIX -depth option. See BSD implementation.
         options.addOption("depth", null, true, "Depth of the recursion crawl");
         options.addOption("d", null, false, "Cause find to perform a depth-first traversal");
+
+        // Extra, non POSIX, primaries
+        options.addOption("empty", null, false, "True if the current file or directory is empty");
     }
 
     public static void usage()

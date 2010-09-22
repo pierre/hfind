@@ -92,4 +92,9 @@ public class HdfsItem
     {
         return status;
     }
+
+    public FileSystem getFs()
+    {
+        return fs;
+    }
 }

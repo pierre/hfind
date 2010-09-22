@@ -16,8 +16,10 @@
 
 package com.ning.hfind;
 
+import org.apache.hadoop.fs.FileStatus;
 import org.joda.time.ReadableDateTime;
 
+import java.io.IOException;
 import java.util.Collection;
 
 public interface FileAttributes extends Comparable<FileAttributes>
@@ -43,4 +45,6 @@ public interface FileAttributes extends Comparable<FileAttributes>
     public boolean isWritableBy(String user, Collection<String> groups);
 
     public boolean isExecutableBy(String user, Collection<String> groups);
+
+    public FileStatus[] children() throws IOException;
 }

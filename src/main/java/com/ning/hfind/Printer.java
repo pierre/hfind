@@ -30,7 +30,7 @@ public class Printer
 
     private void run(HdfsItem item, Expression expression)
     {
-        FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getStatus());
+        FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getFs(), item.getStatus());
 
         if (!depthMode) {
             if (expression.evaluate(itemAttributes)) {

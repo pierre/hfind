@@ -18,31 +18,24 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public class TypePrimary implements Primary
+import java.io.IOException;
+
+public class EmptyPrimary implements Primary
 {
-    private final String type;
-
-    private static final String TYPE_DIRECTORY = "d";
-    private static final String TYPE_FILE = "f";
-
-    public TypePrimary(String type)
-    {
-        if (!type.equals(TYPE_DIRECTORY) && !type.equals(TYPE_FILE)) {
-            throw new IllegalArgumentException(String.format("File type must be %s or %s", TYPE_DIRECTORY, TYPE_FILE));
-        }
-
-        this.type = type;
-    }
-
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return (attributes.isDirectory() && type.equals(TYPE_DIRECTORY)) || (!attributes.isDirectory() && type.equals(TYPE_FILE));
+        try {
+            return (attributes.isDirectory() && attributes.children().length == 0) || (!attributes.isDirectory() && attributes.getLength() == 0);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public String toString()
     {
-        return "type";
+        return "empty";
     }
 }
