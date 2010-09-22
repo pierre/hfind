@@ -5,7 +5,7 @@
     <artifactId>metrics.hfind</artifactId>
     <packaging>jar</packaging>
     <version>1.0.0-SNAPSHOT</version>
-    <name>sweeper</name>
+    <name>hfind</name>
     <description>A find implementation for Hadoop</description>
     <url>http://github.com/pierre/hfind</url>
     <licenses>

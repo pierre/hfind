@@ -14,18 +14,13 @@
  * under the License.
  */
 
-package com.ning.hfind;
+package com.ning.hfind.filter;
 
-public interface FileAttributesFilter
+import com.ning.hfind.FileAttributes;
+
+public interface Operand
 {
-    public static final FileAttributesFilter DEFAULT = new FileAttributesFilter()
-    {
-        @Override
-        public boolean passesFilter(FileAttributes attributes)
-        {
-            return true;
-        }
-    };
+    public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes);
 
-    public boolean passesFilter(FileAttributes attributes);
+    public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes);
 }

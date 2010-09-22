@@ -16,18 +16,20 @@
 
 package com.ning.hfind;
 
+import com.ning.hfind.filter.Expression;
+
 public class Printer
 {
-    public Printer(HdfsItem item, FileAttributesFilter filter)
+    public Printer(HdfsItem item, Expression expression)
     {
-        run(item, filter, "");
+        run(item, expression, "");
     }
 
-    private void run(HdfsItem item, FileAttributesFilter filter, String pathPrefix)
+    private void run(HdfsItem item, Expression expression, String pathPrefix)
     {
         FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getStatus());
 
-        if (filter.passesFilter(itemAttributes)) {
+        if (expression.evaluate(itemAttributes)) {
             String filePrefix = "";
 
             if (!itemAttributes.isDirectory()) {
@@ -42,7 +44,7 @@ public class Printer
         }
 
         for (HdfsItem childItem : item.getChildren()) {
-            run(childItem, filter, pathPrefix);
+            run(childItem, expression, pathPrefix);
         }
     }
 }
