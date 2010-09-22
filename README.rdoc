@@ -13,11 +13,13 @@ hfind> hfind /user/pierre -mtime +3 -type d
 
 == Usage
 
-    The hfind shell script in this directory follows the POSIX specification
+    The hfind shell script in this directory follows[1] the POSIX specification
 documented here:
 
     http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
 
+1. As close as possible. As of 2010, some options cannot be implemented (e.g. symbolic links).
+   -depth/-d follows the BSD implementation.
 
 == Build
 
