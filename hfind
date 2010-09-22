@@ -1,0 +1,8 @@
+#/bin/sh -e
+
+# To build
+#mvn clean assembly:assembly
+
+# Use HADOOP_OPTS to customize for your hadoop installation, e.g.:
+# export HADOOP_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
+java $HADOOP_OPTS -jar target/metrics.hfind-*-jar-with-dependencies.jar $@

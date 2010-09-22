@@ -2,7 +2,11 @@
 
 == Usage
 
+    The hfind shell script in this directory follows the POSIX specification
+documented here:
+
     http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
+
 
 == Build
 
