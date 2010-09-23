@@ -25,7 +25,6 @@ documented here:
 
 * Implement -prune (has no effect today)
 * Implement -exec and -ok
-* Implement -atime
 * Implement -perm
 
 == Build

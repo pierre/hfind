@@ -19,26 +19,26 @@ package com.ning.hfind.primary;
 import com.ning.hfind.FileAttributes;
 import org.joda.time.DateTime;
 
-class MtimePrimary implements Primary
+class AtimePrimary implements Primary
 {
-    private final int mtime;
+    private final int atime;
     private final OperandModifier operandModifier;
 
-    public MtimePrimary(String mtime)
+    public AtimePrimary(String atime)
     {
-        operandModifier = new OperandModifier(mtime);
-        this.mtime = operandModifier.getSanitizedArgument();
+        operandModifier = new OperandModifier(atime);
+        this.atime = operandModifier.getSanitizedArgument();
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return operandModifier.evaluate(mtime, ((new DateTime().getMillis()) - attributes.getModificationDate().getMillis()) / 86400000);
+        return operandModifier.evaluate(atime, ((new DateTime().getMillis()) - attributes.getAccessDate().getMillis()) / 86400000);
     }
 
     @Override
     public String toString()
     {
-        return "mtime";
+        return "atime";
     }
 }

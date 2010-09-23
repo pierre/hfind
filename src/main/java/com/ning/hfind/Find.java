@@ -50,7 +50,6 @@ public class Find
      * -xdev The primary shall always evaluate as true; it shall cause find not to continue descending past directories that have a different device ID ( st_dev, see the stat() function defined in the System Interfaces volume of IEEE Std 1003.1-2001). If any -xdev primary is specified, it shall apply to the entire expression even if the -xdev primary would not normally be evaluated.
      * -type only implements 'f' or 'd'
      * -links The primary shall evaluate as true if the file has n links.
-     * -atime The primary shall evaluate as true if the file access time subtracted from the initialization time, divided by 86400 (with any remainder discarded), is n.
      * -ctime The primary shall evaluate as true if the time of last change of file status information subtracted from the initialization time, divided by 86400 (with any remainder discarded), is n.
      *
      * TODO: -exec, -ok
@@ -76,6 +75,7 @@ public class Find
         options.addOption("user", null, true, "The primary shall evaluate as true if the file belongs to the specified user");
         options.addOption("group", null, true, "The primary shall evaluate as true if the file belongs to the specified group");
         options.addOption("size", null, true, "The primary shall evaluate as true if the file size in bytes, divided by 512 and rounded up to the next integer, is n. If n is followed by the character 'c', the size shall be in bytes");
+        options.addOption("atime", null, true, "The primary shall evaluate as true if the file access time subtracted from the initialization time, divided by 86400 (with any remainder discarded), is arg");
         options.addOption("mtime", null, true, "The primary shall evaluate as true if the file modification time subtracted from the initialization time, divided by 86400 (with any remainder discarded), is arg");
         options.addOption("print", null, false, "The primary shall always evaluate as true; it shall cause the current pathname to be written to standard output");
         options.addOption("newer", null, true, "The primary shall evaluate as true if the modification time of the current file is more recent than the modification time of the file named by the pathname file");

@@ -24,6 +24,8 @@ import java.util.Collection;
 
 public interface FileAttributes extends Comparable<FileAttributes>
 {
+    public ReadableDateTime getAccessDate();
+
     public ReadableDateTime getModificationDate();
 
     public boolean isDirectory();

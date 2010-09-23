@@ -39,6 +39,12 @@ public class FileStatusAttributes implements FileAttributes
     }
 
     @Override
+    public ReadableDateTime getAccessDate()
+    {
+        return new DateTime(status.getAccessTime());
+    }
+
+    @Override
     public ReadableDateTime getModificationDate()
     {
         return new DateTime(status.getModificationTime());
