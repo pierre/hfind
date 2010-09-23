@@ -23,6 +23,7 @@ documented here:
 
 == TODO
 
+* Shell pattern matching for -name
 * Implement -prune (has no effect today)
 * Implement -exec and -ok
 * Implement -perm
