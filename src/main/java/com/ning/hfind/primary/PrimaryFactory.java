@@ -38,7 +38,7 @@ class PrimaryFactory
         else if (primary.equals("nogroup")) {
             return new NoGroupPrimary();
         }
-        else if (primary.equals("prune")) { // TODO and do print
+        else if (primary.equals("prune")) { // TODO
             return Primary.ALWAYS_MATCH;
         }
         else if (primary.equals("perm")) {
@@ -58,6 +58,9 @@ class PrimaryFactory
         }
         else if (primary.equals("mtime")) {
             return new MtimePrimary(argument);
+        }
+        else if (primary.equals("print")) {
+            return Primary.ALWAYS_MATCH;
         }
         else if (primary.equals("newer")) {
             throw new IllegalArgumentException("TODO");
