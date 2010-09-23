@@ -17,17 +17,18 @@
 package com.ning.hfind.primary;
 
 import org.apache.commons.cli.Option;
+import org.apache.oro.text.regex.MalformedPatternException;
 
 class PrimaryFactory
 {
-    public static Primary primaryFromOption(Option o)
+    public static Primary primaryFromOption(Option o) throws MalformedPatternException
     {
         String primary = o.getOpt();
         String argument = o.getValue();
         return getPrimary(primary, argument);
     }
 
-    private static Primary getPrimary(String primary, String argument)
+    private static Primary getPrimary(String primary, String argument) throws MalformedPatternException
     {
         if (primary.equals("name")) {
             return new NamePrimary(argument);

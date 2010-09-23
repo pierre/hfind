@@ -18,14 +18,21 @@ package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 import org.apache.commons.lang.StringUtils;
+import org.apache.oro.text.GlobCompiler;
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.PatternMatcher;
+import org.apache.oro.text.regex.Perl5Matcher;
 
 class NamePrimary implements Primary
 {
-    private final String namePattern;
+    private Pattern pattern;
+    PatternMatcher matcher = new Perl5Matcher();
 
-    public NamePrimary(String namePattern)
+    public NamePrimary(String namePattern) throws MalformedPatternException
     {
-        this.namePattern = namePattern;
+        GlobCompiler compiler = new GlobCompiler();
+        this.pattern = compiler.compile(namePattern);
     }
 
     @Override
@@ -34,8 +41,7 @@ class NamePrimary implements Primary
         String[] fullPath = StringUtils.split(attributes.getPath(), "/");
         String filename = fullPath[fullPath.length - 1];
 
-        // TODO: POSIX pattern matching
-        return filename.equals(namePattern);
+        return matcher.matches(filename, pattern);
     }
 
     @Override

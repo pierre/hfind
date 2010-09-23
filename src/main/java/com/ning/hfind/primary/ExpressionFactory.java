@@ -18,6 +18,7 @@ package com.ning.hfind.primary;
 
 import com.ning.hfind.Find;
 import org.apache.commons.cli.Option;
+import org.apache.oro.text.regex.MalformedPatternException;
 
 public class ExpressionFactory
 {
@@ -27,11 +28,16 @@ public class ExpressionFactory
             return new Expression(Primary.ALWAYS_MATCH, Primary.ALWAYS_MATCH, new AndOperand());
         }
         else {
-            return buildExpressionFromCommandLine(options, 0);
+            try {
+                return buildExpressionFromCommandLine(options, 0);
+            }
+            catch (MalformedPatternException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
     }
 
-    private static Expression buildExpressionFromCommandLine(Option[] options, int index)
+    private static Expression buildExpressionFromCommandLine(Option[] options, int index) throws MalformedPatternException
     {
         Primary leftPrimary = PrimaryFactory.primaryFromOption(options[index]);
         index++;

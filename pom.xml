@@ -54,6 +54,11 @@
             <artifactId>config-magic</artifactId>
             <version>0.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>5.12.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
