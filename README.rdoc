@@ -21,6 +21,12 @@ documented here:
 1. As close as possible. As of 2010, some options cannot be implemented (e.g. symbolic links).
    -depth/-d follows the BSD implementation.
 
+== TODO
+
+* Implement -prune (has no effect today)
+* Implement -exec and -ok
+* Implement -atime
+
 == Build
 
     mvn assembly:assembly
