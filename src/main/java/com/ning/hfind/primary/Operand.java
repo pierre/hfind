@@ -18,7 +18,7 @@ package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-public interface Operand
+interface Operand
 {
     public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes);
 

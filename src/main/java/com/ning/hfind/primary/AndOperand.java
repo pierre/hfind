@@ -18,7 +18,7 @@ package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-public class AndOperand implements Operand
+class AndOperand implements Operand
 {
     @Override
     public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes)

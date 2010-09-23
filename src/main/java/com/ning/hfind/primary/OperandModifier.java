@@ -18,7 +18,7 @@ package com.ning.hfind.primary;
 
 import org.apache.commons.lang.StringUtils;
 
-public class OperandModifier
+class OperandModifier
 {
     private final MODIFIED modified;
     private final Integer sanitizedArgument;
