@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 import com.ning.hfind.HdfsItem;
@@ -78,7 +78,7 @@ public class Expression
 
         new Printer(listing, this, depthMode);
     }
-    
+
     @Override
     public String toString()
     {

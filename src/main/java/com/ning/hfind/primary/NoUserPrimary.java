@@ -14,27 +14,21 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-public class OrOperand implements Operand
+class NoUserPrimary implements Primary
 {
     @Override
-    public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes)
+    public boolean passesFilter(FileAttributes attributes)
     {
-        return primaryLeft.passesFilter(fileAttributes) || primaryRight.passesFilter(fileAttributes);
-    }
-
-    @Override
-    public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes)
-    {
-        return primaryLeft.passesFilter(fileAttributes) || expressionRight.evaluate(fileAttributes);
+        return attributes.getOwner() == null;
     }
 
     @Override
     public String toString()
     {
-        return "or";
+        return "nouser";
     }
 }

@@ -14,21 +14,28 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-class NoGroupPrimary implements Primary
+import java.io.IOException;
+
+class EmptyPrimary implements Primary
 {
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return attributes.getGroup() == null;
+        try {
+            return (attributes.isDirectory() && attributes.children().length == 0) || (!attributes.isDirectory() && attributes.getLength() == 0);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-    
+
     @Override
     public String toString()
     {
-        return "nogroup";
+        return "empty";
     }
 }

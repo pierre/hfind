@@ -14,44 +14,31 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
-import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
-class SizePrimary implements Primary
+class MtimePrimary implements Primary
 {
-    private final int size;
-
-    private static final String SIZE_CHARACTER = "c";
-    private boolean blockMode = true;
+    private final int mtime;
     private final OperandModifier operandModifier;
 
-    public SizePrimary(String size)
+    public MtimePrimary(String size)
     {
-        if (StringUtils.endsWith(size, SIZE_CHARACTER)) {
-            blockMode = false;
-            size = StringUtils.chop(size);
-        }
-
         operandModifier = new OperandModifier(size);
-        this.size = operandModifier.getSanitizedArgument();
+        mtime = operandModifier.getSanitizedArgument();
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        if (blockMode) {
-            return operandModifier.evaluate(size, Math.ceil(attributes.getLength() / 512.0));
-        }
-        else {
-            return operandModifier.evaluate(size, attributes.getLength());
-        }
+        return operandModifier.evaluate(mtime, ((new DateTime().getMillis()) - attributes.getModificationDate().getMillis()) / 86400000);
     }
 
     @Override
     public String toString()
     {
-        return "size";
+        return "mtime";
     }
 }

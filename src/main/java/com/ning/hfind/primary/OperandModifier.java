@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -14,31 +14,28 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
-import org.joda.time.DateTime;
 
-class MtimePrimary implements Primary
+class GroupPrimary implements Primary
 {
-    private final int mtime;
-    private final OperandModifier operandModifier;
+    private final String group;
 
-    public MtimePrimary(String size)
+    public GroupPrimary(String group)
     {
-        operandModifier = new OperandModifier(size);
-        mtime = operandModifier.getSanitizedArgument();
+        this.group = group;
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return operandModifier.evaluate(mtime, ((new DateTime().getMillis()) - attributes.getModificationDate().getMillis()) / 86400000);
+        return attributes.getGroup().equals(group);
     }
-
+    
     @Override
     public String toString()
     {
-        return "mtime";
+        return "group";
     }
 }

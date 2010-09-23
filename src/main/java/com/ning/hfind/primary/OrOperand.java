@@ -14,13 +14,27 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-public interface Operand
+public class OrOperand implements Operand
 {
-    public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes);
+    @Override
+    public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes)
+    {
+        return primaryLeft.passesFilter(fileAttributes) || primaryRight.passesFilter(fileAttributes);
+    }
 
-    public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes);
+    @Override
+    public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes)
+    {
+        return primaryLeft.passesFilter(fileAttributes) || expressionRight.evaluate(fileAttributes);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "or";
+    }
 }

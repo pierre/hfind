@@ -14,21 +14,33 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
+import org.apache.commons.lang.StringUtils;
 
-class NoUserPrimary implements Primary
+class NamePrimary implements Primary
 {
+    private final String namePattern;
+
+    public NamePrimary(String namePattern)
+    {
+        this.namePattern = namePattern;
+    }
+
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return attributes.getOwner() == null;
+        String[] fullPath = StringUtils.split(attributes.getPath(), "/");
+        String filename = fullPath[fullPath.length - 1];
+
+        // TODO: POSIX pattern matching
+        return filename.equals(namePattern);
     }
 
     @Override
     public String toString()
     {
-        return "nouser";
+        return "name";
     }
 }

@@ -14,7 +14,7 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import org.apache.commons.cli.Option;
 
@@ -38,7 +38,7 @@ class PrimaryFactory
         else if (primary.equals("nogroup")) {
             return new NoGroupPrimary();
         }
-        else if (primary.equals("prune")) {
+        else if (primary.equals("prune")) { // TODO and do print
             return Primary.ALWAYS_MATCH;
         }
         else if (primary.equals("perm")) {

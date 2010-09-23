@@ -14,28 +14,41 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-import java.io.IOException;
-
-class EmptyPrimary implements Primary
+interface Primary
 {
-    @Override
-    public boolean passesFilter(FileAttributes attributes)
+    public static final Primary ALWAYS_MATCH = new Primary()
     {
-        try {
-            return (attributes.isDirectory() && attributes.children().length == 0) || (!attributes.isDirectory() && attributes.getLength() == 0);
+        @Override
+        public boolean passesFilter(FileAttributes attributes)
+        {
+            return true;
         }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    @Override
-    public String toString()
+        @Override
+        public String toString()
+        {
+            return "true";
+        }
+    };
+
+    public static final Primary NEVER_MATCH = new Primary()
     {
-        return "empty";
-    }
+        @Override
+        public boolean passesFilter(FileAttributes attributes)
+        {
+            return false;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "false";
+        }
+    };
+
+    public boolean passesFilter(FileAttributes attributes);
 }

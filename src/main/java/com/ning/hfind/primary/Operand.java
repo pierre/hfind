@@ -14,28 +14,13 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-class UserPrimary implements Primary
+public interface Operand
 {
-    private final String user;
+    public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes);
 
-    public UserPrimary(String user)
-    {
-        this.user = user;
-    }
-
-    @Override
-    public boolean passesFilter(FileAttributes attributes)
-    {
-        return attributes.getOwner().equals(user);
-    }
-
-    @Override
-    public String toString()
-    {
-        return "user";
-    }
+    public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes);
 }

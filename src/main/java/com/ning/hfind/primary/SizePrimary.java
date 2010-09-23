@@ -14,33 +14,44 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 import org.apache.commons.lang.StringUtils;
 
-class NamePrimary implements Primary
+class SizePrimary implements Primary
 {
-    private final String namePattern;
+    private final int size;
 
-    public NamePrimary(String namePattern)
+    private static final String SIZE_CHARACTER = "c";
+    private boolean blockMode = true;
+    private final OperandModifier operandModifier;
+
+    public SizePrimary(String size)
     {
-        this.namePattern = namePattern;
+        if (StringUtils.endsWith(size, SIZE_CHARACTER)) {
+            blockMode = false;
+            size = StringUtils.chop(size);
+        }
+
+        operandModifier = new OperandModifier(size);
+        this.size = operandModifier.getSanitizedArgument();
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        String[] fullPath = StringUtils.split(attributes.getPath(), "/");
-        String filename = fullPath[fullPath.length - 1];
-
-        // TODO: POSIX pattern matching
-        return filename.equals(namePattern);
+        if (blockMode) {
+            return operandModifier.evaluate(size, Math.ceil(attributes.getLength() / 512.0));
+        }
+        else {
+            return operandModifier.evaluate(size, attributes.getLength());
+        }
     }
 
     @Override
     public String toString()
     {
-        return "name";
+        return "size";
     }
 }

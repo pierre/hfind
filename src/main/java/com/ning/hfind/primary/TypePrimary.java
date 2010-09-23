@@ -14,28 +14,35 @@
  * under the License.
  */
 
-package com.ning.hfind.filter;
+package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 
-class GroupPrimary implements Primary
+class TypePrimary implements Primary
 {
-    private final String group;
+    private final String type;
 
-    public GroupPrimary(String group)
+    private static final String TYPE_DIRECTORY = "d";
+    private static final String TYPE_FILE = "f";
+
+    public TypePrimary(String type)
     {
-        this.group = group;
+        if (!type.equals(TYPE_DIRECTORY) && !type.equals(TYPE_FILE)) {
+            throw new IllegalArgumentException(String.format("File type must be %s or %s", TYPE_DIRECTORY, TYPE_FILE));
+        }
+
+        this.type = type;
     }
 
     @Override
     public boolean passesFilter(FileAttributes attributes)
     {
-        return attributes.getGroup().equals(group);
+        return (attributes.isDirectory() && type.equals(TYPE_DIRECTORY)) || (!attributes.isDirectory() && type.equals(TYPE_FILE));
     }
-    
+
     @Override
     public String toString()
     {
-        return "group";
+        return "type";
     }
 }

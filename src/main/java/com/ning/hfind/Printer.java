@@ -16,7 +16,7 @@
 
 package com.ning.hfind;
 
-import com.ning.hfind.filter.Expression;
+import com.ning.hfind.primary.Expression;
 
 public class Printer
 {

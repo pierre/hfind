@@ -17,8 +17,8 @@
 package com.ning.hfind;
 
 import com.ning.hfind.config.HFindConfig;
-import com.ning.hfind.filter.Expression;
-import com.ning.hfind.filter.ExpressionFactory;
+import com.ning.hfind.primary.Expression;
+import com.ning.hfind.primary.ExpressionFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
