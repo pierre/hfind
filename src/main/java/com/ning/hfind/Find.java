@@ -17,16 +17,11 @@
 package com.ning.hfind;
 
 import com.ning.hfind.config.HFindConfig;
-import com.ning.hfind.filter.AndOperand;
 import com.ning.hfind.filter.Expression;
-import com.ning.hfind.filter.Operand;
-import com.ning.hfind.filter.OrOperand;
-import com.ning.hfind.filter.Primary;
-import com.ning.hfind.filter.PrimaryFactory;
+import com.ning.hfind.filter.ExpressionFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -41,8 +36,8 @@ public class Find
     private static final Options options = new Options();
     private static FileSystem fs;
 
-    private static final String AND = "a";
-    private static final String OR = "o";
+    public static final String AND = "a";
+    public static final String OR = "o";
 
     private static final int COMMAND_LINE_ERROR = 2;
     private static final int HADOOP_ERROR = 3;
@@ -147,12 +142,7 @@ public class Find
 
         Expression expression = null;
         try {
-            if (line.getOptions().length > 0) {
-                expression = buildExpressionFromCommandLine(line.getOptions(), 0);
-            }
-            else {
-                expression = new Expression(Primary.ALWAYS_MATCH, Primary.ALWAYS_MATCH, new AndOperand());
-            }
+            expression = ExpressionFactory.buildExpressionFromCommandLine(line.getOptions());
         }
         catch (IllegalArgumentException e) {
             System.err.println(e);
@@ -169,47 +159,5 @@ public class Find
             System.err.println(String.format("Error crawling HDFS: %s", e.getLocalizedMessage()));
             System.exit(HADOOP_ERROR);
         }
-    }
-
-    private static Expression buildExpressionFromCommandLine(Option[] options, int index)
-    {
-        Primary leftPrimary = primaryFromOption(options[index]);
-        index++;
-
-        // We ignore certain primaries, e.g. -depth
-        if (leftPrimary == null) {
-            leftPrimary = Primary.ALWAYS_MATCH;
-        }
-
-        if (index >= options.length) {
-            return new Expression(leftPrimary, Primary.ALWAYS_MATCH, new AndOperand());
-        }
-        Option o = options[index];
-
-        Operand operand;
-        if (o.getOpt().equals(OR)) {
-            operand = new OrOperand();
-            index++;
-        }
-        else if (o.getOpt().equals(AND)) {
-            operand = new AndOperand();
-            index++;
-        }
-        else {
-            operand = new AndOperand();
-        }
-
-        if (index >= options.length) {
-            throw new IllegalArgumentException("Invalid expression");
-        }
-
-        return new Expression(leftPrimary, buildExpressionFromCommandLine(options, index), operand);
-    }
-
-    private static Primary primaryFromOption(Option o)
-    {
-        String primary = o.getOpt();
-        String argument = o.getValue();
-        return PrimaryFactory.getPrimary(primary, argument);
     }
 }

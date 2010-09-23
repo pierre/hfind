@@ -18,7 +18,7 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public class NoUserPrimary implements Primary
+class NoUserPrimary implements Primary
 {
     @Override
     public boolean passesFilter(FileAttributes attributes)

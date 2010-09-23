@@ -19,7 +19,7 @@ package com.ning.hfind.filter;
 import com.ning.hfind.FileAttributes;
 import org.joda.time.DateTime;
 
-public class MtimePrimary implements Primary
+class MtimePrimary implements Primary
 {
     private final int mtime;
     private final OperandModifier operandModifier;

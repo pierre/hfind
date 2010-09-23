@@ -19,7 +19,7 @@ package com.ning.hfind.filter;
 import com.ning.hfind.FileAttributes;
 import org.apache.commons.lang.StringUtils;
 
-public class NamePrimary implements Primary
+class NamePrimary implements Primary
 {
     private final String namePattern;
 

@@ -18,7 +18,7 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public interface Primary
+interface Primary
 {
     public static final Primary ALWAYS_MATCH = new Primary()
     {

@@ -16,9 +16,18 @@
 
 package com.ning.hfind.filter;
 
-public class PrimaryFactory
+import org.apache.commons.cli.Option;
+
+class PrimaryFactory
 {
-    public static Primary getPrimary(String primary, String argument)
+    public static Primary primaryFromOption(Option o)
+    {
+        String primary = o.getOpt();
+        String argument = o.getValue();
+        return getPrimary(primary, argument);
+    }
+
+    private static Primary getPrimary(String primary, String argument)
     {
         if (primary.equals("name")) {
             return new NamePrimary(argument);

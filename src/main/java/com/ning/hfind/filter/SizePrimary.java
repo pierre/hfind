@@ -19,7 +19,7 @@ package com.ning.hfind.filter;
 import com.ning.hfind.FileAttributes;
 import org.apache.commons.lang.StringUtils;
 
-public class SizePrimary implements Primary
+class SizePrimary implements Primary
 {
     private final int size;
 

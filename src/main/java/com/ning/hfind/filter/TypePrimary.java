@@ -18,7 +18,7 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public class TypePrimary implements Primary
+class TypePrimary implements Primary
 {
     private final String type;
 

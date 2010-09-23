@@ -18,7 +18,7 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public class GroupPrimary implements Primary
+class GroupPrimary implements Primary
 {
     private final String group;
 

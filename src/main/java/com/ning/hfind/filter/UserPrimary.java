@@ -18,7 +18,7 @@ package com.ning.hfind.filter;
 
 import com.ning.hfind.FileAttributes;
 
-public class UserPrimary implements Primary
+class UserPrimary implements Primary
 {
     private final String user;
 

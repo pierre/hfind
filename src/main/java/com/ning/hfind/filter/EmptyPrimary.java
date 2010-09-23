@@ -20,7 +20,7 @@ import com.ning.hfind.FileAttributes;
 
 import java.io.IOException;
 
-public class EmptyPrimary implements Primary
+class EmptyPrimary implements Primary
 {
     @Override
     public boolean passesFilter(FileAttributes attributes)
