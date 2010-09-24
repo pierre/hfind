@@ -33,6 +33,12 @@ class OrOperand implements Operand
     }
 
     @Override
+    public boolean evaluateOperand(Expression expressionLeft, Expression expressionRight, FileAttributes fileAttributes)
+    {
+        return expressionLeft.evaluate(fileAttributes) || expressionRight.evaluate(fileAttributes);
+    }
+
+    @Override
     public String toString()
     {
         return "or";

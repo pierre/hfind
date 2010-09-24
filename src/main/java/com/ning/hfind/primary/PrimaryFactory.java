@@ -23,9 +23,9 @@ class PrimaryFactory
 {
     public static Primary primaryFromOption(Option o) throws MalformedPatternException
     {
-        String primary = o.getOpt();
+        String primaryString = o.getOpt();
         String argument = o.getValue();
-        return getPrimary(primary, argument);
+        return getPrimary(primaryString, argument);
     }
 
     private static Primary getPrimary(String primary, String argument) throws MalformedPatternException
@@ -39,8 +39,8 @@ class PrimaryFactory
         else if (primary.equals("nogroup")) {
             return new NoGroupPrimary();
         }
-        else if (primary.equals("prune")) { // TODO
-            return Primary.ALWAYS_MATCH;
+        else if (primary.equals("prune")) {
+            throw new IllegalArgumentException("TODO");
         }
         else if (primary.equals("perm")) {
             throw new IllegalArgumentException("TODO");
@@ -61,7 +61,7 @@ class PrimaryFactory
             return new MtimePrimary(argument);
         }
         else if (primary.equals("print")) {
-            return Primary.ALWAYS_MATCH;
+            return null;
         }
         else if (primary.equals("newer")) {
             throw new IllegalArgumentException("TODO");

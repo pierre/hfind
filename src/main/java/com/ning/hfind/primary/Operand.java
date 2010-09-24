@@ -23,4 +23,6 @@ interface Operand
     public boolean evaluateOperand(Primary primaryLeft, Primary primaryRight, FileAttributes fileAttributes);
 
     public boolean evaluateOperand(Primary primaryLeft, Expression expressionRight, FileAttributes fileAttributes);
+
+    public boolean evaluateOperand(Expression expressionLeft, Expression expressionRight, FileAttributes fileAttributes);
 }

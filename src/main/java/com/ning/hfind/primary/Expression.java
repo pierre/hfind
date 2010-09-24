@@ -32,6 +32,7 @@ import java.io.IOException;
  */
 public class Expression
 {
+    private final Expression expressionLeft;
     private final Expression expressionRight;
 
     private final Primary primaryLeft;
@@ -52,6 +53,7 @@ public class Expression
         Operand operand
     )
     {
+        this.expressionLeft = null;
         this.expressionRight = null;
 
         this.primaryLeft = primaryLeft;
@@ -65,9 +67,20 @@ public class Expression
         Operand operand
     )
     {
+        this.expressionLeft = null;
         this.primaryRight = null;
 
         this.primaryLeft = primaryLeft;
+        this.operand = operand;
+        this.expressionRight = expressionRight;
+    }
+
+    public Expression(Expression expressionLeft, Expression expressionRight, Operand operand)
+    {
+        this.primaryLeft = null;
+        this.primaryRight = null;
+
+        this.expressionLeft = expressionLeft;
         this.operand = operand;
         this.expressionRight = expressionRight;
     }
@@ -82,21 +95,33 @@ public class Expression
     @Override
     public String toString()
     {
-        if (primaryRight != null) {
-            return String.format("(%s %s %s)", primaryLeft, operand, primaryRight);
+        if (expressionLeft != null && expressionRight != null) {
+            return String.format("(%s) %s (%s)", expressionLeft, operand, expressionRight);
+        }
+        else if (primaryLeft != null && primaryRight != null) {
+            return String.format("%s %s %s", primaryLeft, operand, primaryRight);
+        }
+        else if (primaryLeft != null && expressionRight != null) {
+            return String.format("%s %s (%s)", primaryLeft, operand, expressionRight);
         }
         else {
-            return String.format("%s %s (%s)", primaryLeft, operand, expressionRight);
+            throw new IllegalStateException(String.format("Malformatted expression: %s", toString()));
         }
     }
 
     public boolean evaluate(FileAttributes fileAttributes)
     {
-        if (primaryRight != null) {
+        if (expressionLeft != null && expressionRight != null) {
+            return operand.evaluateOperand(expressionLeft, expressionRight, fileAttributes);
+        }
+        else if (primaryLeft != null && primaryRight != null) {
             return operand.evaluateOperand(primaryLeft, primaryRight, fileAttributes);
         }
-        else {
+        else if (primaryLeft != null && expressionRight != null) {
             return operand.evaluateOperand(primaryLeft, expressionRight, fileAttributes);
+        }
+        else {
+            throw new IllegalStateException(String.format("Malformatted expression: %s", toString()));
         }
     }
 }

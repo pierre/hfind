@@ -19,9 +19,11 @@ package com.ning.hfind;
 import com.ning.hfind.config.HFindConfig;
 import com.ning.hfind.primary.Expression;
 import com.ning.hfind.primary.ExpressionFactory;
+import com.ning.hfind.util.PushbackIterator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
@@ -30,6 +32,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.skife.config.ConfigurationObjectFactory;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 public class Find
 {
@@ -111,11 +114,11 @@ public class Find
         fs = FileSystem.get(hadoopConfig);
     }
 
-    public static void main(String[] args) throws ParseException, IOException
+    public static void main(String[] origArgs) throws ParseException, IOException
     {
         CommandLineParser parser = new PosixParser();
-        CommandLine line = parser.parse(options, args);
-        args = line.getArgs();
+        CommandLine line = parser.parse(options, origArgs);
+        String[] args = line.getArgs();
 
         if (args.length > 1) {
             // find(1) seems to complain about the first argument only, let's do the same
@@ -140,9 +143,13 @@ public class Find
             depthMode = true;
         }
 
+        // Ignore certain primaries
+        Iterator<Option> optionsIterator = ExpressionFactory.sanitizeCommandLine(line.getOptions());
+
         Expression expression = null;
         try {
-            expression = ExpressionFactory.buildExpressionFromCommandLine(line.getOptions());
+            expression = ExpressionFactory.buildExpressionFromCommandLine(new PushbackIterator<Option>(optionsIterator));
+            //System.out.println(String.format("find %s: %s", StringUtils.join(origArgs, " "), expression));
         }
         catch (IllegalArgumentException e) {
             System.err.println(e);
