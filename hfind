@@ -1,8 +1,13 @@
 #/bin/sh -e
 
+# Use HFIND_OPTS to customize for your hadoop installation, e.g.:
+# export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
+#
+HFIND_JAR=${HFIND_JAR:=$PWD/target/metrics.hfind-*-jar-with-dependencies.jar}
+
 # To build
 #mvn clean assembly:assembly
 
-# Use HADOOP_OPTS to customize for your hadoop installation, e.g.:
-# export HADOOP_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
-java $HADOOP_OPTS -jar target/metrics.hfind-*-jar-with-dependencies.jar $@
+java $HFIND_OPTS -jar $HFIND_JAR $@
+
+# vim:set ft=sh nospell:

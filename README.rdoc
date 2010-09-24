@@ -1,25 +1,69 @@
 = hfind, find(1) implementation for Hadoop
 
+== Getting started
+
+Download the latest version of the hfind tarball at:
+
+    http://github.com/pierre/hfind/downloads
+
+The tarball contains two files, a shell script and a jar.
+
+You first need to configure hfind to find your Hadoop installation,
+via the HFIND_OPTS variable:
+
+    export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
+
+You can simply run ./hfind from the exploded tarball directory:
+
+    [pierre@mouraf ~/downloads]$ ls
+    metrics.hfind-1.0.0-SNAPSHOT.tar.gz
+    [pierre@mouraf ~/downloads]$ tar zxvf metrics.hfind-1.0.0-SNAPSHOT.tar.gz
+    hfind
+    target/metrics.hfind-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+    [pierre@mouraf ~/downloads]$ export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.ning.com:9
+    000"
+    i[pierre@mouraf ~/downloads]$ ./hfind /user/pierre -type f -name "file*.dat" -o -type d -name a
+    /user/pierre/testing/a
+    /user/pierre/testing/a/b/fileb.dat
+    /user/pierre/testing/a/c/filec.dat
+    /user/pierre/testing/a/filea.dat
+    /user/pierre/testing/a/fileaa.dat
+
+
 == Examples
 
-hfind> hfind /user/pierre -type f -name fileb.dat -o -type d -name a
-/pierre/testing/a
-/pierre/testing/a/b/fileb.dat
+    [pierre@mouraf ~]$ hfind /user/pierre -type f -name "file*.dat" -o -type d -name a
+    /pierre/testing/a
+    /pierre/testing/a/b/fileb.dat
 
-hfind> hfind /user/pierre -mtime +3 -type d
-/user/pierre/2010/09
-/user/pierre/2010/09/20
-/user/pierre/2010/09/21
+    [pierre@mouraf ~]$ hfind /user/pierre -mtime +3 -type d
+    /user/pierre/2010/09
+    /user/pierre/2010/09/20
+    /user/pierre/2010/09/21
+
 
 == Usage
 
-    The hfind shell script in this directory follows[1] the POSIX specification
-documented here:
+hfind follows[1] the POSIX specification documented here:
 
     http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
 
 1. As close as possible. As of 2010, some options cannot be implemented (e.g. symbolic links).
-   -depth/-d follows the BSD implementation.
+-depth/-d follows the BSD implementation. See TODO below for work in progress.
+
+=== Things to remember
+
+A directory size is always reported as zero. Use -empty to find empty directories.
+
+A directory mtime is the date of the latest modification of any file in the directory, going one level only. You can have more recent files in subdirectories:
+
+    [pierre@mouraf ~]$ find /tmp/a -ls
+    45404725        0 drwxr-xr-x    4 pierre   wheel         136 Sep 23 17:10 /tmp/a
+    45404727        0 drwxr-xr-x    3 pierre   wheel         102 Sep 23 17:11 /tmp/a/b
+    45404730        0 -rw-r--r--    1 pierre   wheel           0 Sep 23 17:11 /tmp/a/b/hello
+    45404726        0 -rw-r--r--    1 pierre   wheel           0 Sep 23 17:10 /tmp/a/hello
+
+In the previous example, mtime of /tmp/a is 17:10 although, it contains /tmp/a/b/hello, modified later.
 
 == TODO
 
@@ -35,3 +79,17 @@ documented here:
 == License
 
 See COPYING file.
+
+Copyright 2010 Ning
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
