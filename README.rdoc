@@ -13,7 +13,7 @@ via the HFIND_OPTS variable:
 
     export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
 
-You can simply run ./hfind from the exploded tarball directory:
+You can then simply run ./hfind from the exploded tarball directory:
 
     [pierre@mouraf ~/downloads]$ ls
     metrics.hfind-1.0.0-SNAPSHOT.tar.gz
@@ -22,7 +22,7 @@ You can simply run ./hfind from the exploded tarball directory:
     target/metrics.hfind-1.0.0-SNAPSHOT-jar-with-dependencies.jar
     [pierre@mouraf ~/downloads]$ export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.ning.com:9
     000"
-    i[pierre@mouraf ~/downloads]$ ./hfind /user/pierre -type f -name "file*.dat" -o -type d -name a
+    [pierre@mouraf ~/downloads]$ ./hfind /user/pierre -type f -name "file*.dat" -o -type d -name a
     /user/pierre/testing/a
     /user/pierre/testing/a/b/fileb.dat
     /user/pierre/testing/a/c/filec.dat
@@ -44,12 +44,25 @@ You can simply run ./hfind from the exploded tarball directory:
 
 == Usage
 
-hfind follows[1] the POSIX specification documented here:
+hfind follows as close as possible the POSIX specification documented here:
 
     http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
 
-1. As close as possible. As of 2010, some options cannot be implemented (e.g. symbolic links).
--depth/-d follows the BSD implementation. See TODO below for work in progress.
+As of 2010, some options cannot be implemented (e.g. symbolic links).
+
+-depth/-d follows the BSD implementation:
+
+     -d      Cause find to perform a depth-first traversal, i.e., directories are visited in post-order and all entries in a
+             directory will be acted on before the directory itself.  By default, find visits directories in pre-order, i.e.,
+             before their contents.  Note, the default is not a breadth-first traversal.
+             This option is equivalent to the -depth primary of IEEE Std 1003.1-2001 (``POSIX.1'').
+
+    -depth n
+             True if the depth of the file relative to the starting point of the traversal is n.
+
+
+See TODO below for work in progress.
+
 
 === Things to remember
 
@@ -67,7 +80,8 @@ In the previous example, mtime of /tmp/a is 17:10 although, it contains /tmp/a/b
 
 == TODO
 
-* Implement -prune (has no effect today)
+* Respect parentheses
+* Implement -prune
 * Implement -exec and -ok
 * Implement -perm
 
