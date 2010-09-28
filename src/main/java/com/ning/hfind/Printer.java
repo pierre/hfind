@@ -26,6 +26,7 @@ public class Printer
     private final boolean deleteMode;
     private final boolean depthMode;
     private final boolean endLineWithNull;
+    private final boolean verbose;
 
     public Printer(FsItem topLevelItem, Expression expression, PrinterConfig config)
     {
@@ -35,6 +36,7 @@ public class Printer
         this.deleteMode = config.deleteMode();
         this.depthMode = config.depthMode();
         this.endLineWithNull = config.endLineWithNull();
+        this.verbose = config.verbose();
     }
 
     public void run()
@@ -44,7 +46,10 @@ public class Printer
 
     private void run(FsItem item)
     {
-        FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getFs(), item.getStatus());
+        FileStatusAttributes itemAttributes = item.getFileStatusAttributes();
+        if (itemAttributes == null) {
+            return;
+        }
 
         if (!depthMode) {
             if (expression.evaluate(itemAttributes)) {
@@ -68,7 +73,9 @@ public class Printer
         String pathName = preparePathNameForPrinting(currentItem);
 
         if (deleteMode) {
-            currentItem.delete();
+            if (currentItem.delete() && verbose) {
+                System.out.println(String.format("Deleted %s", pathName));
+            }
         }
         else {
             if (dontAddANewLine) {
@@ -82,7 +89,14 @@ public class Printer
 
     protected String preparePathNameForPrinting(FsItem currentItem)
     {
-        String pathName = currentItem.getName();
+        String pathName;
+        if (verbose) {
+            pathName = currentItem.getFullName();
+        }
+        else {
+            pathName = currentItem.getName();
+        }
+
         if (endLineWithNull) {
             pathName = String.format("%s\0", pathName);
         }

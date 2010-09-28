@@ -16,7 +16,6 @@
 
 package com.ning.hfind;
 
-import com.ning.hfind.config.HFindConfig;
 import com.ning.hfind.primary.Expression;
 import com.ning.hfind.primary.ExpressionFactory;
 import com.ning.hfind.util.PushbackIterator;
@@ -27,9 +26,6 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.skife.config.ConfigurationObjectFactory;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -37,7 +33,6 @@ import java.util.Iterator;
 public class Find
 {
     private static final Options options = new Options();
-    private static FileSystem fs;
 
     public static final String AND = "a";
     public static final String OR = "o";
@@ -59,6 +54,7 @@ public class Find
      */
     static {
         options.addOption("h", "help", false, "Print this message");
+        options.addOption("v", "verbose", false, "Verbose mode");
 
         options.addOption(AND, null, false, "AND operator");
         options.addOption(OR, null, false, "OR operator");
@@ -99,32 +95,9 @@ public class Find
         formatter.printHelp("hfind [-H | -L] path ... [operand_expression ...]", options);
     }
 
-    private static Configuration configureHDFSAccess(HFindConfig config)
-    {
-        Configuration conf = new Configuration();
-
-        conf.set("fs.default.name", config.getNamenodeUrl());
-        conf.set("hadoop.job.ugi", config.getHadoopUgi());
-
-        return conf;
-    }
-
-    private static void connectToHDFS() throws IOException
-    {
-        HFindConfig hfindConfig = new ConfigurationObjectFactory(System.getProperties()).build(HFindConfig.class);
-        Configuration hadoopConfig = configureHDFSAccess(hfindConfig);
-
-        // Set the URI schema to file:///, this will make FileSystem.get return a LocalFileSystem instance
-        if (hfindConfig.localMode()) {
-            hadoopConfig.set("fs.default.name", "file:///");
-        }
-
-        fs = FileSystem.get(hadoopConfig);
-    }
-
     public static void main(String[] origArgs) throws ParseException, IOException
     {
-        PrinterConfig config = new PrinterConfig();
+        PrinterConfig printerConfig = new PrinterConfig();
 
         CommandLineParser parser = new PosixParser();
         CommandLine line = parser.parse(options, origArgs);
@@ -150,14 +123,17 @@ public class Find
         }
         if (line.hasOption("delete")) {
             // -delete implies -d
-            config.setDepthMode(true);
-            config.setDeleteMode(true);
+            printerConfig.setDepthMode(true);
+            printerConfig.setDeleteMode(true);
         }
         if (line.hasOption("d")) {
-            config.setDepthMode(true);
+            printerConfig.setDepthMode(true);
         }
         if (line.hasOption("print0")) {
-            config.setEndLineWithNull(true);
+            printerConfig.setEndLineWithNull(true);
+        }
+        if (line.hasOption("verbose")) {
+            printerConfig.setVerbose(true);
         }
 
         // Ignore certain primaries
@@ -174,9 +150,7 @@ public class Find
         }
 
         try {
-            connectToHDFS();
-            expression.run(path, fs, depth, config);
-
+            expression.run(path, depth, printerConfig);
             System.exit(0);
         }
         catch (IOException e) {

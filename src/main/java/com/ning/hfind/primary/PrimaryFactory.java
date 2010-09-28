@@ -81,6 +81,9 @@ class PrimaryFactory
         else if (primary.equals("delete")) {
             return null;
         }
+        else if (primary.equals("v") || primary.equals("verbose")) {
+            return null;
+        }
         else {
             throw new IllegalArgumentException(String.format("Primary %s (argument %s) not implemented", primary, argument));
         }

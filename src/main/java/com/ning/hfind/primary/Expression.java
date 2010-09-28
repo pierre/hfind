@@ -18,10 +18,10 @@ package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
 import com.ning.hfind.FsItem;
+import com.ning.hfind.HdfsAccess;
 import com.ning.hfind.HdfsItem;
 import com.ning.hfind.Printer;
 import com.ning.hfind.PrinterConfig;
-import org.apache.hadoop.fs.FileSystem;
 
 import java.io.IOException;
 
@@ -89,9 +89,9 @@ public class Expression
         this.expressionRight = expressionRight;
     }
 
-    public void run(String path, FileSystem fs, int depth, PrinterConfig config) throws IOException
+    public void run(String path, int depth, PrinterConfig config) throws IOException
     {
-        FsItem listing = new HdfsItem(fs, path, depth);
+        FsItem listing = new HdfsItem(HdfsAccess.get(), path, depth);
         Printer printer = new Printer(listing, this, config);
 
         printer.run();

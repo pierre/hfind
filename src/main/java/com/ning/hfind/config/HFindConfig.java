@@ -18,7 +18,7 @@ package com.ning.hfind.config;
 
 import org.skife.config.Config;
 
-public class HFindConfig
+class HFindConfig
 {
     @Config(value = "hfind.hadoop.namenode.url")
     public String getNamenodeUrl()

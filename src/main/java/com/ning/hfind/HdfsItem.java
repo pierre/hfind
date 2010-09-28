@@ -18,38 +18,31 @@ package com.ning.hfind;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.hadoop.fs.FileStatus;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class HdfsItem implements FsItem
 {
-    private final static Logger log = Logger.getLogger(HdfsItem.class.getName());
-
-    private final FileSystem fs;
-    private final FileStatus status;
+    private final HdfsAccess hdfsAccess;
+    private final int depth;
+    private final String name;
 
     private final Path path;
-    private final int depth;
-
-    private final String name;
 
     private volatile ImmutableList<FsItem> children;
 
-    public HdfsItem(FileSystem fs, String path, int depth) throws IOException
+    public HdfsItem(HdfsAccess hdfsAccess, String path, int depth) throws IOException
     {
-        this(fs, fs.getFileStatus(new Path(path)), depth);
+        this(hdfsAccess, hdfsAccess.getFileStatus(new Path(path)), depth);
     }
 
-    private HdfsItem(FileSystem fs, FileStatus status, int depth) throws IOException
+    private HdfsItem(HdfsAccess hdfsAccess, FileStatus status, int depth) throws IOException
     {
-        this.fs = fs;
-        this.status = status;
+        this.hdfsAccess = hdfsAccess;
+        this.depth = depth;
 
         this.path = status.getPath();
-        this.depth = depth;
 
         if (status.isDir()) {
             this.name = path.toUri().getPath();
@@ -70,8 +63,8 @@ public class HdfsItem implements FsItem
             ImmutableList.Builder<FsItem> children = ImmutableList.builder();
 
             try {
-                for (FileStatus status : fs.listStatus(path)) {
-                    children.add(new HdfsItem(fs, status, depth - 1));
+                for (FileStatus status : hdfsAccess.listStatus(path)) {
+                    children.add(new HdfsItem(hdfsAccess, status, depth - 1));
                 }
             }
             catch (IOException e) {
@@ -85,33 +78,39 @@ public class HdfsItem implements FsItem
     }
 
     @Override
+    public String getFullName()
+    {
+        return path.toString();
+    }
+
+    @Override
     public String getName()
     {
         return name;
     }
 
     @Override
-    public FileStatus getStatus()
-    {
-        return status;
-    }
-
-    @Override
-    public FileSystem getFs()
-    {
-        return fs;
-    }
-
-    @Override
     public boolean delete()
     {
         try {
-            fs.delete(path, true);
+            hdfsAccess.delete(path);
             return true;
         }
         catch (IOException e) {
             System.err.println(String.format("Unable to delete: %s (%s)", name, e.getLocalizedMessage()));
             return false;
+        }
+    }
+
+    @Override
+    public FileStatusAttributes getFileStatusAttributes()
+    {
+        try {
+            return hdfsAccess.getFileStatusAttributes(path);
+        }
+        catch (IOException e) {
+            System.err.println(String.format("Unable to access path: %s", path));
+            return null;
         }
     }
 }

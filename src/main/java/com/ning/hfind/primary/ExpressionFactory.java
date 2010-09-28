@@ -92,7 +92,6 @@ public class ExpressionFactory
         while (optionIterator.hasNext()) {
             Option option =  optionIterator.next();
 
-
             try {
                 if (PrimaryFactory.primaryFromOption(option) == null) {
                     optionIterator.remove();

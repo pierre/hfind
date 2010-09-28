@@ -5,6 +5,7 @@ public class PrinterConfig
     private boolean depthMode = false;
     private boolean endLineWithNull = false;
     private boolean deleteMode = false;
+    private boolean verbose = false;
 
     public boolean depthMode()
     {
@@ -34,5 +35,15 @@ public class PrinterConfig
     public void setDeleteMode(boolean deleteMode)
     {
         this.deleteMode = deleteMode;
+    }
+
+    public boolean verbose()
+    {
+        return verbose;
+    }
+
+    public void setVerbose(boolean verbose)
+    {
+        this.verbose = verbose;
     }
 }
