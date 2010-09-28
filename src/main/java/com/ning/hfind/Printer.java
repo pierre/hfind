@@ -20,36 +20,35 @@ import com.ning.hfind.primary.Expression;
 
 public class Printer
 {
-    private final FsItem item;
+    private final FsItem topLevelItem;
     private final Expression expression;
+
+    private final boolean deleteMode;
     private final boolean depthMode;
     private final boolean endLineWithNull;
 
-    public Printer(FsItem item, Expression expression, PrinterConfig config)
+    public Printer(FsItem topLevelItem, Expression expression, PrinterConfig config)
     {
-        this.item = item;
+        this.topLevelItem = topLevelItem;
         this.expression = expression;
+
+        this.deleteMode = config.deleteMode();
         this.depthMode = config.depthMode();
         this.endLineWithNull = config.endLineWithNull();
     }
 
     public void run()
     {
-        run(item);
+        run(topLevelItem);
     }
 
     private void run(FsItem item)
     {
         FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getFs(), item.getStatus());
 
-        String pathName = item.getName();
-        if (endLineWithNull) {
-            pathName = String.format("%s\0", pathName);
-        }
-
         if (!depthMode) {
             if (expression.evaluate(itemAttributes)) {
-                print(pathName, endLineWithNull);
+                print(item, endLineWithNull);
             }
         }
 
@@ -59,18 +58,34 @@ public class Printer
 
         if (depthMode) {
             if (expression.evaluate(itemAttributes)) {
-                print(pathName, endLineWithNull);
+                print(item, endLineWithNull);
             }
         }
     }
 
-    protected void print(String pathName, boolean dontAddANewLine)
+    private void print(FsItem currentItem, boolean dontAddANewLine)
     {
-        if (dontAddANewLine) {
-            System.out.print(pathName);
+        String pathName = preparePathNameForPrinting(currentItem);
+
+        if (deleteMode) {
+            currentItem.delete();
         }
         else {
-            System.out.println(pathName);
+            if (dontAddANewLine) {
+                System.out.print(pathName);
+            }
+            else {
+                System.out.println(pathName);
+            }
         }
+    }
+
+    protected String preparePathNameForPrinting(FsItem currentItem)
+    {
+        String pathName = currentItem.getName();
+        if (endLineWithNull) {
+            pathName = String.format("%s\0", pathName);
+        }
+        return pathName;
     }
 }

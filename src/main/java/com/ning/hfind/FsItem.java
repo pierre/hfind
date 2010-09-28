@@ -13,4 +13,6 @@ public interface FsItem
     FileStatus getStatus();
 
     FileSystem getFs();
+
+    boolean delete();
 }

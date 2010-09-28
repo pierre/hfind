@@ -90,6 +90,7 @@ public class Find
         // Extra, non POSIX, primaries
         options.addOption("empty", null, false, "True if the current file or directory is empty");
         options.addOption("print0", null, false, "This primary always evaluates to true.  It prints the pathname of the current file to standard output, followed by an ASCII NUL character (character code 0)");
+        options.addOption("delete", null, false, "Delete found files and/or directories.  Always returns true. Depth-first traversal processing is implied by this option");
     }
 
     public static void usage()
@@ -146,6 +147,11 @@ public class Find
         if (line.hasOption("depth")) {
             String depthOptionValue = line.getOptionValue("depth");
             depth = Integer.valueOf(depthOptionValue);
+        }
+        if (line.hasOption("delete")) {
+            // -delete implies -d
+            config.setDepthMode(true);
+            config.setDeleteMode(true);
         }
         if (line.hasOption("d")) {
             config.setDepthMode(true);

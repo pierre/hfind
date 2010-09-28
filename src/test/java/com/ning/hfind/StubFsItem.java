@@ -3,14 +3,15 @@ package com.ning.hfind;
 import com.google.common.collect.ImmutableList;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.RawLocalFileSystem;
 
 public class StubFsItem implements FsItem
 {
-    private final String name;
+    private final String pathName;
 
-    public StubFsItem(String name)
+    public StubFsItem(String pathName)
     {
-        this.name = name;
+        this.pathName = pathName;
     }
 
     @Override
@@ -22,7 +23,7 @@ public class StubFsItem implements FsItem
     @Override
     public String getName()
     {
-        return name;
+        return pathName;
     }
 
     @Override
@@ -34,6 +35,12 @@ public class StubFsItem implements FsItem
     @Override
     public FileSystem getFs()
     {
-        return null;
+        return new RawLocalFileSystem();
+    }
+
+    @Override
+    public boolean delete()
+    {
+        return false;
     }
 }

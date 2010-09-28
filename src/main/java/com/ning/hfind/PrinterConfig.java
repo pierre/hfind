@@ -4,6 +4,7 @@ public class PrinterConfig
 {
     private boolean depthMode = false;
     private boolean endLineWithNull = false;
+    private boolean deleteMode = false;
 
     public boolean depthMode()
     {
@@ -23,5 +24,15 @@ public class PrinterConfig
     public void setEndLineWithNull(boolean endLineWithNull)
     {
         this.endLineWithNull = endLineWithNull;
+    }
+
+    public boolean deleteMode()
+    {
+        return deleteMode;
+    }
+
+    public void setDeleteMode(boolean deleteMode)
+    {
+        this.deleteMode = deleteMode;
     }
 }

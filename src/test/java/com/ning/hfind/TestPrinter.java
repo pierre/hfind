@@ -8,25 +8,11 @@ public class TestPrinter
 {
     private static final Character NULL_CHARACTER = '\u0000';
 
-    class SilentPrinter extends Printer
+    @Test(groups = "fast")
+    public void testDeleteIsOffByDefault() throws Exception
     {
-        private String lastPathName = null;
-
-        public SilentPrinter(FsItem item, Expression expression, PrinterConfig config)
-        {
-            super(item, expression, config);
-        }
-
-        @Override
-        protected void print(String pathName, boolean ignored)
-        {
-            lastPathName = pathName;
-        }
-
-        public String getLastPathName()
-        {
-            return lastPathName;
-        }
+        PrinterConfig config = new PrinterConfig();
+        Assert.assertFalse(config.deleteMode());
     }
 
     @Test(groups = "fast")
@@ -42,9 +28,10 @@ public class TestPrinter
 
     private void testOneItem(String pathName, PrinterConfig config, Character lastCharacter)
     {
-        SilentPrinter printer = new SilentPrinter(new StubFsItem(pathName), Expression.TRUE, config);
-        printer.run();
+        FsItem item = new StubFsItem(pathName);
+        Printer printer = new Printer(item, Expression.TRUE, config);
 
-        Assert.assertEquals(printer.getLastPathName().charAt(printer.getLastPathName().length() - 1), lastCharacter.charValue());
+        String formattedName = printer.preparePathNameForPrinting(item);
+        Assert.assertEquals(formattedName.charAt(formattedName.length() - 1), lastCharacter.charValue());
     }
 }

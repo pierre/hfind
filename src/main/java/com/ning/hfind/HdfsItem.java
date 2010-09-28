@@ -101,4 +101,17 @@ public class HdfsItem implements FsItem
     {
         return fs;
     }
+
+    @Override
+    public boolean delete()
+    {
+        try {
+            fs.delete(path, true);
+            return true;
+        }
+        catch (IOException e) {
+            System.err.println(String.format("Unable to delete: %s (%s)", name, e.getLocalizedMessage()));
+            return false;
+        }
+    }
 }
