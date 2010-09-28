@@ -31,4 +31,10 @@ public class HFindConfig
     {
         return "hadoop,hadoop";
     }
+
+    @Config(value = "hfind.local")
+    public boolean localMode()
+    {
+        return false;
+    }
 }

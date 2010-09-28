@@ -112,6 +112,12 @@ public class Find
     {
         HFindConfig hfindConfig = new ConfigurationObjectFactory(System.getProperties()).build(HFindConfig.class);
         Configuration hadoopConfig = configureHDFSAccess(hfindConfig);
+
+        // Set the URI schema to file:///, this will make FileSystem.get return a LocalFileSystem instance
+        if (hfindConfig.localMode()) {
+            hadoopConfig.set("fs.default.name", "file:///");
+        }
+
         fs = FileSystem.get(hadoopConfig);
     }
 
