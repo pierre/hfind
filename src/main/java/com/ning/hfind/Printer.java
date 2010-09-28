@@ -20,32 +20,57 @@ import com.ning.hfind.primary.Expression;
 
 public class Printer
 {
+    private final FsItem item;
+    private final Expression expression;
     private final boolean depthMode;
+    private final boolean endLineWithNull;
 
-    public Printer(HdfsItem item, Expression expression, boolean depthMode)
+    public Printer(FsItem item, Expression expression, PrinterConfig config)
     {
-        this.depthMode = depthMode;
-        run(item, expression);
+        this.item = item;
+        this.expression = expression;
+        this.depthMode = config.depthMode();
+        this.endLineWithNull = config.endLineWithNull();
     }
 
-    private void run(HdfsItem item, Expression expression)
+    public void run()
+    {
+        run(item);
+    }
+
+    private void run(FsItem item)
     {
         FileStatusAttributes itemAttributes = new FileStatusAttributes(item.getFs(), item.getStatus());
 
+        String pathName = item.getName();
+        if (endLineWithNull) {
+            pathName = String.format("%s\0", pathName);
+        }
+
         if (!depthMode) {
             if (expression.evaluate(itemAttributes)) {
-                System.out.println(item.getName());
+                print(pathName, endLineWithNull);
             }
         }
 
-        for (HdfsItem childItem : item.getChildren()) {
-            run(childItem, expression);
+        for (FsItem childItem : item.getChildren()) {
+            run(childItem);
         }
 
         if (depthMode) {
             if (expression.evaluate(itemAttributes)) {
-                System.out.println(item.getName());
+                print(pathName, endLineWithNull);
             }
+        }
+    }
+
+    protected void print(String pathName, boolean dontAddANewLine)
+    {
+        if (dontAddANewLine) {
+            System.out.print(pathName);
+        }
+        else {
+            System.out.println(pathName);
         }
     }
 }

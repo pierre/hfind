@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
-public class HdfsItem
+public class HdfsItem implements FsItem
 {
     private final static Logger log = Logger.getLogger(HdfsItem.class.getName());
 
@@ -36,7 +36,7 @@ public class HdfsItem
 
     private final String name;
 
-    private volatile ImmutableList<HdfsItem> children;
+    private volatile ImmutableList<FsItem> children;
 
     public HdfsItem(FileSystem fs, String path, int depth) throws IOException
     {
@@ -60,13 +60,14 @@ public class HdfsItem
         }
     }
 
-    public ImmutableList<HdfsItem> getChildren()
+    @Override
+    public ImmutableList<FsItem> getChildren()
     {
         if (depth <= 0) {
             children = ImmutableList.of();
         }
         else if (children == null) {
-            ImmutableList.Builder<HdfsItem> children = ImmutableList.builder();
+            ImmutableList.Builder<FsItem> children = ImmutableList.builder();
 
             try {
                 for (FileStatus status : fs.listStatus(path)) {
@@ -83,16 +84,19 @@ public class HdfsItem
         return children;
     }
 
+    @Override
     public String getName()
     {
         return name;
     }
 
+    @Override
     public FileStatus getStatus()
     {
         return status;
     }
 
+    @Override
     public FileSystem getFs()
     {
         return fs;

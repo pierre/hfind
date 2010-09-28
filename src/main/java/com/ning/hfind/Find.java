@@ -89,6 +89,7 @@ public class Find
 
         // Extra, non POSIX, primaries
         options.addOption("empty", null, false, "True if the current file or directory is empty");
+        options.addOption("print0", null, false, "This primary always evaluates to true.  It prints the pathname of the current file to standard output, followed by an ASCII NUL character (character code 0)");
     }
 
     public static void usage()
@@ -116,6 +117,8 @@ public class Find
 
     public static void main(String[] origArgs) throws ParseException, IOException
     {
+        PrinterConfig config = new PrinterConfig();
+
         CommandLineParser parser = new PosixParser();
         CommandLine line = parser.parse(options, origArgs);
         String[] args = line.getArgs();
@@ -138,9 +141,11 @@ public class Find
             String depthOptionValue = line.getOptionValue("depth");
             depth = Integer.valueOf(depthOptionValue);
         }
-        boolean depthMode = false;
         if (line.hasOption("d")) {
-            depthMode = true;
+            config.setDepthMode(true);
+        }
+        if (line.hasOption("print0")) {
+            config.setEndLineWithNull(true);
         }
 
         // Ignore certain primaries
@@ -158,7 +163,7 @@ public class Find
 
         try {
             connectToHDFS();
-            expression.run(path, fs, depth, depthMode);
+            expression.run(path, fs, depth, config);
 
             System.exit(0);
         }

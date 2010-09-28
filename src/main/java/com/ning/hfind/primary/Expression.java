@@ -17,8 +17,10 @@
 package com.ning.hfind.primary;
 
 import com.ning.hfind.FileAttributes;
+import com.ning.hfind.FsItem;
 import com.ning.hfind.HdfsItem;
 import com.ning.hfind.Printer;
+import com.ning.hfind.PrinterConfig;
 import org.apache.hadoop.fs.FileSystem;
 
 import java.io.IOException;
@@ -39,6 +41,8 @@ public class Expression
     private final Primary primaryRight;
 
     private final Operand operand;
+
+    public static final Expression TRUE = new Expression(Primary.ALWAYS_MATCH, Primary.ALWAYS_MATCH, new AndOperand());
 
     /**
      * Base expression
@@ -85,11 +89,12 @@ public class Expression
         this.expressionRight = expressionRight;
     }
 
-    public void run(String path, FileSystem fs, int depth, boolean depthMode) throws IOException
+    public void run(String path, FileSystem fs, int depth, PrinterConfig config) throws IOException
     {
-        HdfsItem listing = new HdfsItem(fs, path, depth);
+        FsItem listing = new HdfsItem(fs, path, depth);
+        Printer printer = new Printer(listing, this, config);
 
-        new Printer(listing, this, depthMode);
+        printer.run();
     }
 
     @Override

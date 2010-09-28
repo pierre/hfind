@@ -75,6 +75,9 @@ class PrimaryFactory
         else if (primary.equals("empty")) {
             return new EmptyPrimary();
         }
+        else if (primary.equals("print0")) {
+            return null;
+        }
         else {
             throw new IllegalArgumentException(String.format("Primary %s (argument %s) not implemented", primary, argument));
         }

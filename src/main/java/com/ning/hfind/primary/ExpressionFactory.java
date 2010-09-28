@@ -29,7 +29,7 @@ public class ExpressionFactory
     public static Expression buildExpressionFromCommandLine(PushbackIterator<Option> iterator)
     {
         if (!iterator.hasNext()) {
-            return new Expression(Primary.ALWAYS_MATCH, Primary.ALWAYS_MATCH, new AndOperand());
+            return Expression.TRUE;
         }
         else {
             try {
