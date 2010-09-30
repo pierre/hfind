@@ -1,0 +1,7 @@
+Changes in 1.0.1
+    * Added support for -print0 and -delete.
+    * Added JVM option hfind.local. Set -Dhfind.local=true for hfind
+      to crawl the local filesystem (turns hfind into find).
+    * Added -v,--verbose option to print the full HDFS path (with URI and namenode).
+      This option will also print deleted files when used with -delete.
+    * Fix HDFS timeout bug when crawling deep trees.
