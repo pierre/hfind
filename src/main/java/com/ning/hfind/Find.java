@@ -79,11 +79,9 @@ public class Find
         options.addOption("print", null, false, "The primary shall always evaluate as true; it shall cause the current pathname to be written to standard output");
         options.addOption("newer", null, true, "The primary shall evaluate as true if the modification time of the current file is more recent than the modification time of the file named by the pathname file");
 
-        // Note: this is NOT the POSIX -depth option. See BSD implementation.
-        options.addOption("depth", null, true, "Depth of the recursion crawl");
-        options.addOption("d", null, false, "Cause find to perform a depth-first traversal");
-
         // Extra, non POSIX, primaries
+        options.addOption("maxdepth", null, true, "Descend at most arg directory levels below the command line arguments.  If any -maxdepth primary is specified, it applies to the entire expression even if it would not normally be evaluated");
+        options.addOption("d", null, false, "Cause find to perform a depth-first traversal");
         options.addOption("empty", null, false, "True if the current file or directory is empty");
         options.addOption("print0", null, false, "This primary always evaluates to true.  It prints the pathname of the current file to standard output, followed by an ASCII NUL character (character code 0)");
         options.addOption("delete", null, false, "Delete found files and/or directories.  Always returns true. Depth-first traversal processing is implied by this option");
@@ -116,10 +114,10 @@ public class Find
         String path = args[0];
         // Optimization: check the depth on a top-level basis, not on a per-file basis
         // This avoids crawling files on Hadoop we don't care about
-        int depth = Integer.MAX_VALUE;
-        if (line.hasOption("depth")) {
-            String depthOptionValue = line.getOptionValue("depth");
-            depth = Integer.valueOf(depthOptionValue);
+        int maxDepth = Integer.MAX_VALUE;
+        if (line.hasOption("maxdepth")) {
+            String maxDepthOptionValue = line.getOptionValue("maxdepth");
+            maxDepth = Integer.valueOf(maxDepthOptionValue);
         }
         if (line.hasOption("delete")) {
             // -delete implies -d
@@ -150,7 +148,7 @@ public class Find
         }
 
         try {
-            expression.run(path, depth, printerConfig);
+            expression.run(path, maxDepth, printerConfig);
             System.exit(0);
         }
         catch (IOException e) {

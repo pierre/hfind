@@ -50,15 +50,17 @@ hfind follows as close as possible the POSIX specification documented here:
 
 As of 2010, some options cannot be implemented (e.g. symbolic links).
 
--depth/-d follows the BSD implementation:
+-maxdepth/-d follows the BSD implementation:
 
      -d      Cause find to perform a depth-first traversal, i.e., directories are visited in post-order and all entries in a
              directory will be acted on before the directory itself.  By default, find visits directories in pre-order, i.e.,
              before their contents.  Note, the default is not a breadth-first traversal.
              This option is equivalent to the -depth primary of IEEE Std 1003.1-2001 (``POSIX.1'').
 
-    -depth n
-             True if the depth of the file relative to the starting point of the traversal is n.
+    -maxdepth n
+             Descend at most n directory levels below the command line arguments.  If any -maxdepth
+             primary is specified, it applies to the entire expression even if it would not normally be evaluated.
+             -maxdepth 0 limits the whole search to the command line arguments.
 
 
 See TODO below for work in progress.
@@ -84,6 +86,7 @@ In the previous example, mtime of /tmp/a is 17:10 although, it contains /tmp/a/b
 * Implement -prune
 * Implement -exec and -ok
 * Implement -perm
+* Implement -depth and -mindepth
 
 == Build
 

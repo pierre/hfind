@@ -66,7 +66,7 @@ class PrimaryFactory
         else if (primary.equals("newer")) {
             throw new IllegalArgumentException("TODO");
         }
-        else if (primary.equals("depth")) {
+        else if (primary.equals("maxdepth")) {
             return null;
         }
         else if (primary.equals("d")) {
