@@ -43,9 +43,7 @@ You can then simply run ./hfind from the exploded tarball directory:
 
 == Usage
 
-hfind follows as close as possible the POSIX specification documented here:
-
-    http://www.opengroup.org/onlinepubs/009695399/utilities/find.html
+hfind follows as close as possible the POSIX specification documented {here}[http://www.opengroup.org/onlinepubs/009695399/utilities/find.html].
 
 As of 2010, some options cannot be implemented (e.g. symbolic links).
 
