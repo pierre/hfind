@@ -1,15 +1,14 @@
-= hfind, find(1) implementation for Hadoop
+= hfind
+
+hfind is a find(1) implementation for Hadoop.
 
 == Getting started
 
-Download the latest version of the hfind tarball at:
-
-    http://github.com/pierre/hfind/downloads
+Download the latest version of the hfind tarball {here}[http://github.com/pierre/hfind/downloads].
 
 The tarball contains two files, a shell script and a jar.
 
-You first need to configure hfind to find your Hadoop installation,
-via the HFIND_OPTS variable:
+You first need to configure hfind to find your Hadoop installation, via the HFIND_OPTS variable:
 
     export HFIND_OPTS="-Dhfind.hadoop.ugi='pierre\,pierre' -Dhfind.hadoop.namenode.url=hdfs://namenode.company.com:9000"
 
@@ -90,14 +89,11 @@ In the previous example, mtime of /tmp/a is 17:10 although, it contains /tmp/a/b
 
 == Build
 
-    mvn assembly:assembly
+    mvn install
 
+== License (see COPYING file for full license)
 
-== License
-
-See COPYING file.
-
-Copyright 2010 Ning
+Copyright 2010-2012 Ning
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
